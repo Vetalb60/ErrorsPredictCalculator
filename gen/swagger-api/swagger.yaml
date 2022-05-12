@@ -1,0 +1,221 @@
+swagger: "2.0"
+info:
+  title: Prediction algorithm's server
+  description: Server for get responce of work hard algorithm.Copr by alex.green 2022
+  version: 0.0.1
+host: localhost
+produces:
+  - application/pdf
+  - text/csv
+  - application/json
+schemes:
+  - http
+basePath: /
+consumes:
+  - multipart/form-data
+
+paths:
+   /:
+     get:
+       produces:
+         - text/plain
+       summary: Check healthz of implemented server.
+       responses:
+         200:
+           description: returns a status
+           schema:
+             $ref: '#/definitions/Health'
+         400:
+           description: Bad request
+           schema:
+             $ref: '#/definitions/Error'
+         500:
+           description: Internal server error
+           schema:
+             $ref: '#/definitions/Error'
+
+   /healthz:
+     get:
+       produces:
+         - text/plain
+       summary: Check healthz of implemented server.
+       responses:
+         200:
+           description: returns a status
+           schema:
+             $ref: '#/definitions/Health'
+         400:
+           description: Bad request
+           schema:
+             $ref: '#/definitions/Error'
+         500:
+           description: Internal server error
+           schema:
+             $ref: '#/definitions/Error'
+
+   /upload:
+     post:
+       summary: Uploads a file.
+       consumes:
+         - multipart/form-data
+       parameters:
+         - in: formData
+           name: upfile
+           type: file
+           description: The file to upload.
+       responses:
+        200:
+          description: successful response
+          schema:
+            $ref: '#/definitions/PostUpload'
+        400:
+          description: Bad request
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Error'
+
+   /delete/{id}:
+     delete:
+       summary: Delete file from database.
+       parameters:
+         - name: id
+           in: path
+           type: integer
+           required: true
+       responses:
+         200:
+           description: successful response
+           schema:
+             $ref: '#/definitions/DeleteKey'
+         400:
+           description: Bad request
+           schema:
+             $ref: '#/definitions/Error'
+         500:
+           description: Internal server error
+           schema:
+             $ref: '#/definitions/Error'
+
+   /method/{id}:
+     post:
+       summary: Calculate energy of error selected method of predict.
+       consumes:
+         - application/json
+       parameters:
+         - in: body
+           name: method
+           description: The method of predict.
+           schema:
+             $ref: '#/definitions/Method'
+         - in: path
+           name: id
+           description: Identificator of decode file.
+           type: integer
+           required: true
+       responses:
+         200:
+           description: OK
+           schema:
+             $ref: '#/definitions/Energy'
+         400:
+           description: Bad request
+           schema:
+             $ref: '#/definitions/Error'
+         500:
+           description: Internal server error
+           schema:
+             $ref: '#/definitions/Error'
+
+   /files:
+     get:
+       summary: Get files list from database.
+       produces:
+         - text/plain
+       operationId: getList
+       responses:
+         200:
+           description: returns a list
+           schema:
+             $ref: '#/definitions/Array'
+         400:
+           description: Bad request
+           schema:
+             $ref: '#/definitions/Error'
+         500:
+           description: Internal server error
+           schema:
+             $ref: '#/definitions/Error'
+
+definitions:
+  Error:
+    type: object
+    required:
+      - message
+      - code
+    description: Error message
+    properties:
+      message:
+        type: string
+      code:
+        type: integer
+
+  PostUpload:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+
+  DeleteKey:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+
+  Method:
+    type: object
+    required:
+      - method
+    properties:
+      method:
+        type: string
+
+  Energy:
+    type: array
+    items:
+      type: array
+      items:
+        type: object
+        properties:
+          energy:
+            type: string
+
+  Array:
+    type: array
+    items:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          name:
+            type: string
+          file_size:
+            type: integer
+          insert_date:
+            type: string
+
+  Health:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
