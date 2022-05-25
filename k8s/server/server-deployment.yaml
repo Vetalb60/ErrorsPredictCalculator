@@ -17,10 +17,10 @@ spec:
         app: server
     spec:
       containers:
-        - image: {YOUR DOCKER HUB PROFILE}/server:tag
+        - image: vetalb60/server:0.7
           name: server
           ports:
-            - containerPort: 30777
+            - containerPort: 80
               protocol: TCP
           env:
             - name: MYSQL_POD_IP

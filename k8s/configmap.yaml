@@ -4,7 +4,7 @@ metadata:
   name: server-config
   namespace: default
 data:
-  mysql-pod-ip: '{IP MYSQL POD}'
+  mysql-pod-ip: 172.17.0.7
   mysql-database-name: "blobs"
   mysql-database-port: "3306"
   mysql-database-user: "root"

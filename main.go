@@ -37,8 +37,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	err = mysql_.InitDB(log_main, conn)
-	if err != nil {
+	if err = mysql_.InitDB(log_main, conn); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -81,7 +80,7 @@ func main() {
 
 	server.ConfigureAPI()
 
-	if err := server.Serve(); err != nil {
+	if err = server.Serve(); err != nil {
 		log.Fatalln(err)
 	}
 }

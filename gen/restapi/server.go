@@ -32,7 +32,7 @@ const (
 	schemeHTTP  	= "http"
 	schemeHTTPS 	= "https"
 	schemeUnix  	= "unix"
-	_DEFAULT_PORT_ 	= "30777"
+	_DEFAULT_PORT_ 	= "80"
 )
 
 var defaultSchemes []string
