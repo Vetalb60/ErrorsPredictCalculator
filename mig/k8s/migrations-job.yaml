@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrations
+spec:
+  template:
+    metadata:
+      labels:
+        app: migrations
+    spec:
+      containers:
+        - name: migrations
+          image: '{YOUR DOCKER HUB PROFILE}/migrations:tag'
+          ports:
+            - containerPort: 33333
+              name: server
+          env:
+            - name: MYSQL_POD_IP
+              valueFrom:
+                configMapKeyRef:
+                  name: server-config
+                  key: mysql-pod-ip
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-pass
+                  key: password
+            - name: MYSQL_DATABASE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: server-config
+                  key: mysql-database-name
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: server-config
+                  key: mysql-database-port
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: server-config
+                  key: mysql-database-user
+            - name: MYSQL_TABLE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: server-config
+                  key: mysql-table_name
+      restartPolicy: OnFailure

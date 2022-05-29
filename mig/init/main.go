@@ -96,7 +96,7 @@ func migrateSQL(conn *sql.DB, driverName string) error {
 func establishConnectionWithRetry(conn *sql.DB) {
 	b := backoff.NewExponentialBackOff()
 	// We wait forever until the connection will be established.
-	// In practice k8s will kill the pod if it takes too long.
+	// In practice helm will kill the pod if it takes too long.
 	b.MaxElapsedTime = 0
 
 	_ = backoff.Retry(func() error {
