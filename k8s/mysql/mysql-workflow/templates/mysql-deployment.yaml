@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+    tier: {{ .Values.image.tier }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.deployment.strategy.mysql }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        tier: {{ .Values.image.tier }}
+    spec:
+      hostname: {{ .Release.Name }}
+      subdomain: default-subdomain
+      containers:
+        - name: {{ .Release.Name }}
+          image: {{ .Values.image.database }}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-pass
+                  key: password
+          ports:
+            - containerPort: {{ .Values.database.port }}
+              name: {{ .Release.Name }}
+              protocol: TCP
+          volumeMounts:
+            - mountPath: {{ .Values.volume.mountPath }}
+              name: {{ .Release.Name }}-persistance-storage
+      volumes:
+        - name: {{ .Release.Name }}-persistance-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-pv-claim

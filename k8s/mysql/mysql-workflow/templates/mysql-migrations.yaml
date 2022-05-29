@@ -1,24 +1,25 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: migrations
+  name: {{ .Release.Name }}-migrations
 spec:
+  backoffLimit: 20
   template:
     metadata:
       labels:
-        app: migrations
+        app: {{ .Release.Name }}-migrations
     spec:
       containers:
-        - name: migrations
-          image: '{YOUR DOCKER HUB PROFILE}/migrations:tag'
+        - name: {{ .Release.Name }}-migrations
+          image: {{ .Values.image.migrations }}
           ports:
-            - containerPort: 33333
-              name: server
+            - containerPort: {{ .Values.container.port }}
+              name: {{ .Values.container.name }}
           env:
             - name: MYSQL_POD_IP
               valueFrom:
                 configMapKeyRef:
-                  name: server-config
+                  name: {{ .Values.configmap.name }}
                   key: mysql-pod-ip
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -28,21 +29,18 @@ spec:
             - name: MYSQL_DATABASE_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: server-config
+                  name: {{ .Values.configmap.name }}
                   key: mysql-database-name
             - name: MYSQL_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: server-config
-                  key: mysql-database-port
+              value: {{ .Values.database.port | quote }}
             - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
-                  name: server-config
+                  name: {{ .Values.configmap.name }}
                   key: mysql-database-user
             - name: MYSQL_TABLE_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: server-config
+                  name: {{ .Values.configmap.name }}
                   key: mysql-table_name
-      restartPolicy: OnFailure
+      restartPolicy: {{ .Values.restartPolicy }}

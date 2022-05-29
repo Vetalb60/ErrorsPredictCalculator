@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configmap.name }}
+  namespace: {{ .Values.configmap.namespace }}
+data:
+  mysql-pod-ip: {{ .Release.Name }}-service
+  mysql-database-name: blobs
+  mysql-database-user: root
+  mysql-table_name: files

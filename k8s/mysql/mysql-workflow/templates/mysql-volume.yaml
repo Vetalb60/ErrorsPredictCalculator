@@ -1,7 +1,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: mysql-standard
+  name: {{ .Release.Name }}-standard
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 
@@ -10,13 +10,13 @@ volumeBindingMode: WaitForFirstConsumer
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pv-claim
+  name: {{ .Release.Name }}-pv-claim
   labels:
-    app: mysql
-    tier: database
+    app: {{ .Release.Name }}
+    tier: {{ .Values.image.tier }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.resources.storage }}

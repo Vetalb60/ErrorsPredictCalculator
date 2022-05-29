@@ -1,0 +1,33 @@
+# Default values for server-workflow.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  serverRepo: vetalb60/server:0.7
+  mysqlRepo:
+
+deployment:
+  strategy:
+    server: Recreate
+  containers:
+    port:
+      server: 80
+      mysql: 3306
+
+service:
+  type: NodePort
+  port: 80
+
+ingress:
+  enabled: false
+  hosts:
+    host: server.info
+    paths:
+      path: /
+      pathType: Prefix
+    port: 80
+
+configmap:
+  name: server-config

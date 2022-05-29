@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: server
+  name: {{ .Release.Name }}-deployment
   labels:
-    app: server
+    app: {{ .Release.Name }}
 spec:
-  replicas: 2
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: server
+      app: {{ .Release.Name }}
   strategy:
-    type: Recreate
+    type: {{ .Values.strategy }}
   template:
     metadata:
       labels:
-        app: server
+        app: {{ .Release.Name }}
     spec:
       containers:
-        - image: vetalb60/server:0.7
-          name: server
+        - image: {{ .Values.image.serverRepo }}
+          name: {{ .Release.Name }}
           ports:
-            - containerPort: 80
+            - containerPort: {{ .Values.deployment.containers.port.server }}
               protocol: TCP
           env:
             - name: MYSQL_POD_IP
               valueFrom:
                 configMapKeyRef:
-                  name: server-config
+                  name: {{ .Values.configmap.name }}
                   key: mysql-pod-ip
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -36,20 +36,17 @@ spec:
             - name: MYSQL_DATABASE_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: server-config
+                  name: {{ .Values.configmap.name }}
                   key: mysql-database-name
             - name: MYSQL_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: server-config
-                  key: mysql-database-port
+              value: {{ .Values.deployment.containers.port.mysql | quote }}
             - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
-                  name: server-config
+                  name: {{ .Values.configmap.name }}
                   key: mysql-database-user
             - name: MYSQL_TABLE_NAME
               valueFrom:
                 configMapKeyRef:
-                  name: server-config
+                  name: {{ .Values.configmap.name }}
                   key: mysql-table_name
