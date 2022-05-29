@@ -11,9 +11,9 @@ Methods of adding and deleting files, viewing a list of files in the database, v
 - First, you need to run the ConfigMap file, in which you specify the necessary input data in addition to the ip pod mysql (the field will have to be changed later).\
 - Before starting calculations, you need to start the mysql database (volume, secret and deployment - in order).\
 - In .yaml of volume, you must specify the size of the allocated memory (storage). In secret.yaml, write a password.\
-- Next, you must apply a job with <a href="">migrations</a> to organize tables in the database.\
+- Next, you must apply a job with <a href="https://github.com/Vetalb60/ErrorsPredictCalculator/tree/main/mig">migrations</a> to organize tables in the database.\
 - After implementing the database, you can start the demonstration of server.\
-- Communication with the server is carried out using the <a href="">client</a>.
+- Communication with the server is carried out using the <a href="https://github.com/Vetalb60/ErrorCalculateClient">client</a>.
 
 Run:
 -------------------
@@ -33,12 +33,17 @@ Run:
     kubectl apply -f server-deployment.yaml
     kubectl apply -f server-service.yaml
 
+### 3. Helm
+
+    helm secrets install mysql ./k8s/mysql/mysql-workflow/ -n default -f ./k8s/mysql/mysql-workflow/secrets.yaml
+    helm install server ./k8s/server/server-workflow
+
 -------------------
 ### Modules
 
-- <a href="">server</a>
-- <a href="">migrations</a>
-- <a href="">client</a>
+- <a href="https://github.com/Vetalb60/ErrorsPredictCalculator">server</a>
+- <a href="https://github.com/Vetalb60/ErrorsPredictCalculator/tree/main/mig">migrations</a>
+- <a href="https://github.com/Vetalb60/ErrorCalculateClient">client</a>
 
 -------------------
 ### Get Help
